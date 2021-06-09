@@ -22,7 +22,7 @@ public class TestGreeter {
     String someone = "Ravi";
     String match = "abc";
 
-    assertThat(greeter.greet(someone), containsString(someone));
+    assertThat(greeter.greet(someone), containsString(abc));
   }
 
   @Test
