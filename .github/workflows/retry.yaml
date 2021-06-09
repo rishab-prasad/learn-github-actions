@@ -1,0 +1,45 @@
+# https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#job-status-check-functions
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idstepscontinue-on-error
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idtimeout-minutes
+name: retry-examples
+on: workflow_dispatch 
+
+jobs:
+  retry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10                       # The maximum number of minutes to let a job run before GitHub automatically cancels it. Default: 360
+    steps:
+    
+      - name: test
+        timeout-minutes: 15                   # The maximum number of minutes to run the step before killing the process.
+        continue-on-error: true               # make the step always success
+        id: test
+        run: exit 1                           # let's say 1st failed. for you, here could be mvn deploy command.
+        
+      - name: retry
+        continue-on-error: true
+        id: retry1
+        if: steps.test.outcome=='failure'     # check the step outcome, retry 1st time
+        run: exit 1                           # if it fails again. if it's succeeds, the latter steps will be skipped, and status is successful.
+        
+      - name: retry 2
+        continue-on-error: true
+        id: retry2
+        if: steps.retry1.outcome=='failure'   # check the step outcome, retry 2nd time
+        run: |
+          echo "retry 2nd time"
+          exit 1                              # fail again
+          
+      - name: retry 3
+        if: failure()                         # Returns true when any previous step of a job fails
+        run: |
+          echo retry 3rd time                 # it passed in retry 3
+          
+      - name: set the status              
+        if: always()                          # Always returns true, even when canceled.
+        run: |
+          if ${{ steps.test.outcome=='success' || steps.retry1.outcome=='success' || steps.retry2.outcome=='success' || steps.retry3.outcome=='success' }}; then
+             echo fine
+          else
+             echo not fine
+          fi

@@ -1,0 +1,56 @@
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idcontainer
+name: container-and-service-example
+on: workflow_dispatch
+
+jobs:
+
+  docker-node:
+    runs-on: ubuntu-latest
+    container:
+        image: node:13.5.0-alpine3.10
+        ## If the image's container registry requires authentication to pull the image
+        #credentials:
+        #    username: ${{ github.actor }}
+        #    password: ${{ secrets.ghcr_token }}
+        ## Sets an array of volumes for the container to use.
+        #volumes:
+        #    - my_docker_volume:/volume_mount
+        #    - /source/directory:/destination/directory
+        ## Map port 8080 on the Docker host to port 80 on the container 
+        #ports:
+        #    - 8080:80
+        #env:
+        #   key1: value1
+        #options: --storage-opt size=120G --cpu 1
+        
+    steps:
+      - name: Log node version  
+        run: node -v
+      
+      - name: Step with docker
+        # syntax: docker://<image-name>
+        uses: docker://node:12.14.1-alpine3.10
+        with:
+            entrypoint: /usr/local/bin/node
+            args: -v
+
+
+  multiple-docker-service:
+      runs-on: ubuntu-latest
+      # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idservices
+      services:
+          nginx:
+            image: nginx
+            # Map port 8080 on the Docker host to port 80 on the nginx container
+            ports:
+              - 8080:80
+          redis:
+            image: redis
+            # Map TCP port 6379 on Docker host to a random free port on the Redis container
+            ports:
+              - 6379/tcp
+      steps:
+          - name: verify nginx service
+            run: curl http://localhost:8080 
+        
+       

@@ -1,0 +1,26 @@
+name: Post-Release 
+on:
+  release:
+    types: [released]
+env:
+  RELEASE_VERSION: ${{ github.event.release.name }}
+  SOURCE_CODE_URL: ${{ github.event.release.zipball_url }}
+  BRANCH: ${{ github.event.release.target_commitish }}
+
+jobs:
+  dump-release-context:
+    runs-on: ubuntu-18.04 
+    steps:
+
+      - name: Print Environment Variables
+        run: |
+          echo $${{env.RELEASE_VERSION}}
+          echo $${{env.SOURCE_CODE_URL}}
+          echo $${{env.BRANCH}}
+    
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github.event.release) }}
+        run: echo "$GITHUB_CONTEXT"
+          
+      

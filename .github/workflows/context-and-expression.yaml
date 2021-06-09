@@ -1,0 +1,64 @@
+name: contexts-and-expressions-examples
+on: workflow_dispatch 
+
+jobs:
+  # As part of an expression, you can use boolean, null, number, or string data types.
+  # Boolean literals are not case sensitive, so you can use true or True.
+  expressions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo
+        run: |
+          echo "myNull: ${{ null }}"
+          echo "myBoolean: ${{ false }}"
+          echo "myIntegerNumber: ${{ 711 }}"
+          echo "myFloatNumber: ${{ -9.2 }}"
+          echo "myHexNumber: ${{ 0xff }}"
+          echo "myString: ${{ 'Mona the Octocat' }}"
+          echo "myEscapedString: ${{ 'It''s open source!' }}"
+
+  functions: 
+    runs-on: ubuntu-16.04
+    steps:
+      - name: use functions
+        run: |
+          echo ${{ contains( 'hello', '11' ) }}
+          echo ${{ startsWith( 'hello', 'he' ) }}
+          echo ${{ endsWith( 'hello', '1o' ) }}
+          echo ${{ format( 'Hello {0} {1} {2}', 'World', '!', '!' ) }}
+          
+  operators: 
+    runs-on: ubuntu-latest
+    if: ${{ (5 == 5) || (6 >= 2) || (true != false)  }}
+    steps:
+      - name: Print Message
+        run: echo "Operators Example"
+  
+  dump_context:
+    runs-on: ubuntu-latest    
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master' }}
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJSON(job) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJSON(steps) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJSON(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJSON(matrix) }}
+        run: echo "$MATRIX_CONTEXT"

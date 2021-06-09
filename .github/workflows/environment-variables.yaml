@@ -1,0 +1,52 @@
+# https://docs.github.com/en/actions/reference/environment-variables
+name: environment-variables-example
+
+on: workflow_dispatch
+
+env: 
+  WF_ENV: Available to all jobs 
+
+jobs:
+
+  log-env:
+    runs-on: ubuntu-latest
+    env:
+      JOB_ENV: Available to all steps in log-env jobs
+      
+    steps:
+      # https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-an-environment-variable
+      - name: Set Environment variable
+        run: echo "QUARKUS_LATEST_RELEASE=$(curl https://api.github.com/repos/quarkusio/quarkus/releases | jq '.[0].name' | sed 's/"//g')" >> $GITHUB_ENV
+      
+      - name: Log ENV Variables 
+        env: 
+          STEP_ENV: Available to only this step 
+        run: |
+          echo "WF_ENV: ${WF_ENV}"
+          echo "JOB_ENV: ${JOB_ENV}"
+          echo "STEP_ENV: ${STEP_ENV}"
+          echo "QUARKUS_LATEST_RELEASE: ${QUARKUS_LATEST_RELEASE}"
+          
+  log-default-env: 
+    runs-on: ubuntu-latest
+    steps:
+      # https://docs.github.com/en/actions/reference/environment-variables#default-environment-variables
+      - name: Log Default ENV Variables 
+        run: |
+          echo "HOME: ${HOME}"
+          echo "GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}"
+          echo "GITHUB_ACTION: ${GITHUB_ACTION}"
+          echo "GITHUB_ACTIONS: ${GITHUB_ACTIONS}"
+          echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
+          echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
+          echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
+          echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
+          echo "GITHUB_SHA: ${GITHUB_SHA}"
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          
+      - name: Log ENV Variables
+        run: |
+          echo "WF_ENV: ${WF_ENV}"
+          echo "JOB_ENV: ${JOB_ENV}"
+          echo "STEP_ENV: ${STEP_ENV}"          
+          echo "QUARKUS_LATEST_RELEASE: ${QUARKUS_LATEST_RELEASE}"

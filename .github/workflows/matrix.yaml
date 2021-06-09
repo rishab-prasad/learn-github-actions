@@ -1,0 +1,28 @@
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idstrategymatrix
+name: Matrix Strategy
+on: workflow_dispatch 
+
+jobs: 
+  node-version:
+    strategy: 
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest] 
+        node_version: [6, 8, 10]
+        # including and excluding matrix configuration
+        include: 
+          - os: ubuntu-latest
+            node_version: 12
+        exclude:
+          - os: ubuntu-latest
+            node_version: 6
+          - os: macos-latest
+            node_version: 8
+    runs-on: ${{ matrix.os }}
+    steps: 
+      - name: Log node version 
+        run: node -v
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node_version }}
+      - name: Log node version 
+        run: node -v

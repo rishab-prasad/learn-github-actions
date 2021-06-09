@@ -1,0 +1,30 @@
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#using-a-specific-shell
+name: Use Multiple Shell and Runner Example
+
+on: workflow_dispatch
+
+jobs:
+  run-shell-command:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: echo a string
+        run: echo "Hello World"
+        
+      - name: python Command 
+        shell: python
+        run: |
+          import platform 
+          print
+          (platform.processor())
+          
+  run-windows-commands:
+    runs-on: windows-latest
+    needs: ["run-shell-command"]
+    steps:
+      - name: Directory PowerShell
+        run: Get-Location 
+        
+      - name: Directory Bash      
+        shell: bash 
+        run: pwd 

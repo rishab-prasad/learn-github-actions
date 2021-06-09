@@ -1,0 +1,24 @@
+name: Create Github Release
+on:
+  workflow_dispatch:
+    inputs:
+      release-version:
+        description: 'Version being released'
+        required: true
+      branch:
+        description: 'Branch to release from'
+        required: true
+        default: 'master'
+
+jobs:
+    test:
+        name: Test
+        runs-on: ubuntu-18.04    
+        steps:
+            - name: Checkout Code with Ref '${{ github.ref }}'
+              uses: actions/checkout@v2
+            
+            - name: Create GitHub Release
+              run: |
+                ls -lrt
+                ./.github/scripts/create-github-release.sh ${{ github.event.inputs.release-version}} ${{ github.event.inputs.branch}} $GITHUB_REPOSITORY ${{ secrets.ACCESS_TOKEN }}

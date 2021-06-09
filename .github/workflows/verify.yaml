@@ -1,0 +1,46 @@
+ # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestbranchestags
+ # 
+name: Verify Build Workflow
+on:
+  push:
+    branches: [master, '[1-9].[0-9].x']
+    paths-ignore:
+      - '.github/**' # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
+      - '.gitignore'
+      - 'LICENSE'
+      - 'README*'
+      - 'docs/**'
+  pull_request:
+    branches: [master]
+    paths-ignore:
+      - '.github/**'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'README*'
+      - 'docs/**'
+
+jobs:
+  build-verify:
+    name: Verify Build
+    runs-on: ubuntu-18.04
+    if: github.repository_owner == 'rishab-prasad'
+    steps:
+      - name: Checkout Code with Ref '${{ github.ref }}'
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 11
+        uses: AdoptOpenJDK/install-jdk@v1
+        with:
+          version: '11'
+          architecture: x64
+          
+      - name: Build Project
+        run: mvn clean install
+        
+      - name: Run on Push Event
+        if: github.event_name == 'push'
+        run: echo "Push Event occurred"
+        
+      - name: Run on Pull request Event
+        if: github.event_name == 'pull_request'
+        run: echo "Pull Request Event occurred"
