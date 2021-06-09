@@ -9,6 +9,7 @@ public class Greeter {
    * This is a constructor.
    */
   public Greeter() {
+    Integer a;
 
   }
 
