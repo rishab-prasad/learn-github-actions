@@ -1,0 +1,45 @@
+name: Trigger Reusable Workflow 
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-version:
+        description: 'Registry Release Version'
+        required: true
+      snapshot-version:
+        description: 'Next snapshot version'
+        required: true
+
+jobs: 
+    job1:
+      name: first job
+      runs-on: ubuntu-latest
+      steps: 
+        - name: step1
+          uses: actions/checkout@v2
+        - name: step2
+          run: env
+          
+    job2: 
+      name: secound job
+      runs-on: windows-latest
+      steps:
+        - name: step1
+          uses: actions/checkout@v2
+        - name: step2
+          run: "Get-ChildItem Env: | Sort-Object Name"
+          
+    job3:
+      needs: [job1, job2]
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          target-workflow:
+            - https://github.com/rishab-prasad/practice-github-actions/.github/workflows/reusable-workflow.yml
+      steps:
+        - uses: actions/checkout@v2
+        - name: Repository Dispatch
+          uses: ${{matrix.target-workflow}}
+        with:
+          release-version: ${{ github.event.inputs.release-version}}
+          snapshot-version: ${{ github.event.inputs.snapshot-version}}                
