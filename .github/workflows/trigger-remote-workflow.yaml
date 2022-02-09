@@ -35,7 +35,7 @@ jobs:
       steps:
         - uses: actions/checkout@v2
         - name: Repository Dispatch
-          uses: rishab-prasad/practice-github-actions/.github/workflows/reusable-workflow.yml@main              
+          uses: rishab-prasad/practice-github-actions/.github/workflows/reusable-workflow.yml@master       
           with:
             release-version: ${{ github.event.inputs.release-version}}
             snapshot-version: ${{ github.event.inputs.snapshot-version}}                
