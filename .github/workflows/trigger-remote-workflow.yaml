@@ -44,7 +44,7 @@ jobs:
        - name: Repository Dispatch
          uses: peter-evans/repository-dispatch@v1
          with:
-           token: ${{ secrets.REPO_ACCESS_TOKEN }}
+           token: ${{ secrets.ACCESS_TOKEN }}
            repository: rishab-prasad/practice-github-actions
            event-type: on-oas-updated
            client-payload: '{"openapi_file_path": "app/src/main/resources-unfiltered/META-INF/resources/api-specifications/registry/v2/openapi.json"}'
