@@ -30,12 +30,12 @@ jobs:
           run: "Get-ChildItem Env: | Sort-Object Name"
           
     job3:
-      needs: [job1, job2]
+      #needs: [job1, job2]
       runs-on: ubuntu-latest                   
       steps:
         - uses: actions/checkout@v2
         - name: Repository Dispatch
-          uses: https://github.com/rishab-prasad/practice-github-actions/.github/workflows/reusable-workflow.yml@main              
+          uses: rishab-prasad/practice-github-actions/.github/workflows/reusable-workflow.yml@main              
           with:
             release-version: ${{ github.event.inputs.release-version}}
             snapshot-version: ${{ github.event.inputs.snapshot-version}}                
