@@ -29,13 +29,24 @@ jobs:
         - name: step2
           run: "Get-ChildItem Env: | Sort-Object Name"
           
-    job3:
-      needs: [job1]
-      runs-on: ubuntu-latest                   
-      steps:
-        - uses: actions/checkout@v2
-        - name: Repository Dispatch
-          uses: rishab-prasad/practice-github-actions/.github/workflows/reusable-workflow.yml@master       
-          with:
-            release-version: ${{ github.event.inputs.release-version}}
-            snapshot-version: ${{ github.event.inputs.snapshot-version}}                
+    notify-sdk:
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v2
+ 
+       - uses: dorny/paths-filter@v2
+         id: changes
+         with:
+           base: master
+           filters: |
+             readme:
+               - 'README.md'
+       - name: Repository Dispatch
+         if: steps.changes.outputs.openapi == 'true'
+         uses: peter-evans/repository-dispatch@v1
+         with:
+           token: ${{ secrets.REPO_ACCESS_TOKEN }}
+           repository: rishab-prasad/practice-github-actions
+           event-type: on-oas-updated
+           client-payload: '{"openapi_file_path": "app/src/main/resources-unfiltered/META-INF/resources/api-specifications/registry/v2/openapi.json"}'
+ 
