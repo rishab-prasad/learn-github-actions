@@ -30,7 +30,7 @@ jobs:
           run: "Get-ChildItem Env: | Sort-Object Name"
           
     job3:
-      #needs: [job1, job2]
+      needs: [job1]
       runs-on: ubuntu-latest                   
       steps:
         - uses: actions/checkout@v2
