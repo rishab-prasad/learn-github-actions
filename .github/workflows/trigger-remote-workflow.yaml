@@ -42,7 +42,6 @@ jobs:
              readme:
                - 'README.md'
        - name: Repository Dispatch
-         if: steps.changes.outputs.openapi == 'false'
          uses: peter-evans/repository-dispatch@v1
          with:
            token: ${{ secrets.REPO_ACCESS_TOKEN }}
