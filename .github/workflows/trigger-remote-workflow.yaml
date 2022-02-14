@@ -31,6 +31,9 @@ jobs:
           
     notify-sdk:
      runs-on: ubuntu-latest
+     strategy:
+       matrix:
+        repos: [practice-github-actions, my-project]
      steps:
        - uses: actions/checkout@v2
  
@@ -45,7 +48,7 @@ jobs:
          uses: peter-evans/repository-dispatch@v1
          with:
            token: ${{ secrets.ACCESS_TOKEN }}
-           repository: rishab-prasad/practice-github-actions
+           repository: rishab-prasad/${{ matrix.repos }}
            event-type: on-oas-updated
            client-payload: '{"openapi_file_path": "app/src/main/resources-unfiltered/META-INF/resources/api-specifications/registry/v2/openapi.json"}'
  
