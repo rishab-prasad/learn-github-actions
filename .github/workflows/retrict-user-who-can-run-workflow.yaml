@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 jobs:   
   build:
-    if: contains('["riprasad","lpoulter"]', github.actor)
+    if: contains('["riprasa","lpoulter"]', github.actor)
     runs-on: ubuntu-latest
     steps:
     - name: Print Github Actor
