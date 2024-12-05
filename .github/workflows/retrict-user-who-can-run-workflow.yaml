@@ -1,0 +1,10 @@
+name: Restrict User Who Can Run Workflow
+on:
+  workflow_dispatch:
+jobs:   
+  build:
+    if: contains('["riprasad","lpoulter"]', github.actor)
+    runs-on: ubuntu-latest
+    steps:
+    - name: Print Github Actor
+      run: echo "${{ github.actor }}"
