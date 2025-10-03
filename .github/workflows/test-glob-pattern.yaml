@@ -1,0 +1,14 @@
+name: Test Glob Pattern
+
+on:
+  pull_request:
+    branches:
+      - 'rhoai-[23].[0-9]'
+      - 'rhoai-[23].[0-9][0-9]'
+
+jobs:
+  print-hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say hello
+        run: echo "Hello from branch ${{ github.ref_name }}"
