@@ -1,7 +1,7 @@
 name: Test Glob Pattern
 
 on:
-  pull_request:
+  push:
     branches:
       - 'rhoai-[23].[0-9]'
       - 'rhoai-[23].[0-9][0-9]'
